@@ -1,8 +1,26 @@
-# Email Automation
+# Email Automation with Azure
+
+## Clone the Repository
+Using the ```git clone``` command clone the repository.
+Latest version is located in ```auto-email-base``` branch
+
 
 ## How to run
-Navigate to the root directory using the ```cd``` command. 
-Run the program by running the following command:
+
+#### Step 1
+a. Get the client credentials from the Azure portal.
+b. Create a ```.env``` file and store these variables under the following names:
+    ```TENANT_ID=<value>```
+    ```CLIENT_ID=<value>```
+    ```CLIENT_SECRET=<value>```
+    ```SENDER_EMAIL=<sender's email address>``` - Service account's email address with ```Mail.Send```, ```Mail.ReadWrite``` permissions.
+c. Create an empty logs directory at root level
+d. Create a directory at root level - ```data/input```
+e. Place the CSV file inside the ```input``` directory with 3 mandatory columns - ```email```, ```first_name``` & ```last_name``` (case sensitive).
+
+#### Step 2
+Open the Terminal and navigate to the root directory using the ```cd``` command. 
+Run the program by executing the following command:
 ```python src/main.py```
 
 ## Understand the application logs
@@ -22,4 +40,3 @@ For example:
 ```2025-03-15 11:18:02,964 main.py:14 CRITICAL: File not found at src/config/introduction_email.txt. Exception caught - [Errno 2] No such file or directory: 'src/config/introduction_email.txt'```
 
 The above error message indicates that the code was executed at ```2025-03-15 11:18:02,964 ``` and the execption/error message was written to the log file by the ```main``` file's ```line number 14```. The message states that the file ```introduction_email.txt``` was not found at the mentioned location.
-
