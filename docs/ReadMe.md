@@ -9,13 +9,20 @@ Latest version is located in ```auto-email-base``` branch
 
 #### Step 1
 a. Get the client credentials from the Azure portal.
+
 b. Create a ```.env``` file and store these variables under the following names:
     ```TENANT_ID=<value>```
+    
     ```CLIENT_ID=<value>```
+    
     ```CLIENT_SECRET=<value>```
+    
     ```SENDER_EMAIL=<sender's email address>``` - Service account's email address with ```Mail.Send```, ```Mail.ReadWrite``` permissions.
+
 c. Create an empty logs directory at root level
+
 d. Create a directory at root level - ```data/input```
+
 e. Place the CSV file inside the ```input``` directory with 3 mandatory columns - ```email```, ```first_name``` & ```last_name``` (case sensitive).
 
 #### Step 2
