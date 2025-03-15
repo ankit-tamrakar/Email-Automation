@@ -10,7 +10,7 @@ Run the program by running the following command:
 The application logs can be found under ```logs``` directory. Each log file is a day specific file named email_automation_<current_date>.log format.
 
 The log messages are in the following format:
-```timestamp``` ```file_name```:```line_number``` ```LEVEL```
+```timestamp``` ```file_name```:```line_number``` ```LEVEL``` - ```message```
 
 The logs have 3 different levels:
 1. ```INFO``` - basic success messages.
