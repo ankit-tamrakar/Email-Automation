@@ -3,7 +3,7 @@ import requests
 import os
 import pandas as pd
 from dotenv import load_dotenv
-
+import base64
 from utils.logger import setlog
 
 log = setlog("trigger_email_service")
@@ -11,10 +11,10 @@ log = setlog("trigger_email_service")
 load_dotenv()
 
 
-def send_email(recipient_email, subject, body):
+def send_email(recipient_email, subject, body, attachment_paths=None):
     token = auth.get_access_token()
     if not token:
-        log.error(f"Could not generate auth token.")
+        log.error("Could not generate auth token.")
         return
 
     email_body = {
@@ -26,15 +26,34 @@ def send_email(recipient_email, subject, body):
             },
             "toRecipients": [
                 {"emailAddress": {"address": recipient_email}}
-            ]
+            ],
+            "attachments": []
         },
         "saveToSentItems": "true"
     }
+
+    # Add attachments if provided
+    if attachment_paths:
+        for file_path in attachment_paths:
+            try:
+                with open(file_path, "rb") as file:
+                    content_bytes = base64.b64encode(file.read()).decode('utf-8')
+
+                attachment = {
+                    "@odata.type": "#microsoft.graph.fileAttachment",
+                    "name": os.path.basename(file_path),
+                    "contentType": "application/octet-stream",
+                    "contentBytes": content_bytes
+                }
+                email_body["message"]["attachments"].append(attachment)
+            except Exception as e:
+                log.error(f"Failed to attach {file_path}: {e}")
 
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
+
     try:
         response = requests.post(
             f"https://graph.microsoft.com/v1.0/users/{os.getenv('SENDER_EMAIL')}/sendMail",
