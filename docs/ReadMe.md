@@ -47,3 +47,9 @@ For example:
 ```2025-03-15 11:18:02,964 main.py:14 CRITICAL: File not found at src/config/introduction_email.txt. Exception caught - [Errno 2] No such file or directory: 'src/config/introduction_email.txt'```
 
 The above error message indicates that the code was executed at ```2025-03-15 11:18:02,964 ``` and the execption/error message was written to the log file by the ```main``` file's ```line number 14```. The message states that the file ```introduction_email.txt``` was not found at the mentioned location.
+
+
+### General
+\n -> new line
+\t -> tab
+\"Text in Quotes\" -> 

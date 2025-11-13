@@ -71,17 +71,20 @@ def send_email(recipient_email, subject, body, attachment_paths=None):
 
 def load_data():
     try:
-        dir = "data/input/customer_email.csv"
+        dir = "data/input/customer_email_new.csv"
         cust_details = pd.read_csv(dir, dtype={
-            'email': str, 
+            'email': str,
             'first_name': str,
-            'last_name': str
+            'last_name': str,
+            'company_name': str
         })
         cust_details = cust_details.dropna(subset=["email"])
 
         cust_details["greeting_alias"] = cust_details["first_name"].fillna("").str.capitalize() + " " + cust_details["last_name"].fillna("").str.capitalize()
-    
-        cust_details["greeting_alias"] = cust_details["greeting_alias"].str.strip().fillna("Customer")
+        cust_details["greeting_alias"] = cust_details["greeting_alias"].str.strip()
+
+        cust_details["greeting_alias"] = cust_details.apply(lambda x: x["company_name"] if x["greeting_alias"] in (None, "") else x["greeting_alias"], axis=1)
+        log.info(f"\n{cust_details}")
     except FileNotFoundError as file_error:
         log.critical(f"File not found at path - data/input/customer_email.csv. Exception caught - {file_error}")
     except Exception as e:

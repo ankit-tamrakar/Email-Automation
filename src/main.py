@@ -1,7 +1,7 @@
 import json
+import time
 
 from trigger_email_service import load_data, send_email
-
 from utils.logger import setlog
 
 log = setlog("main")
@@ -21,5 +21,6 @@ if __name__ == '__main__':
             customer['email'],
             email["subject"],
             email["body"].format(reciever=customer['greeting_alias']),
-            attachment_paths=["data/input/seller_export/Supermarkets.txt"]
+            attachment_paths=[r"data/input/Kavamoss Natural Products.pdf"]
         )
+        time.sleep(1)
