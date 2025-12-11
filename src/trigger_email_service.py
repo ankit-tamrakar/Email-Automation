@@ -6,6 +6,7 @@ import pandas as pd
 import time
 from dotenv import load_dotenv
 from utils.logger import setlog
+from utils.logger import exctn_id
 
 log = setlog("trigger_email_service")
 
@@ -88,17 +89,18 @@ def send_email(recipient_email, subject, body, token, attachment_paths=None):
 
                 current_token = new_token
                 headers["Authorization"] = f"Bearer {current_token}"
-                # Don’t increment retries here – we want to retry immediately with a fresh token
                 continue
 
             else:
                 log.error(f"Failed to send email to user {recipient_email}: {response.text}")
                 retries += 1
                 if retries < max_retries:
-                    time.sleep(1)
+                    time.sleep(5)
                     log.info(f"Retrying email for user {recipient_email} (attempt {retries + 1}/{max_retries})")
 
         log.error(f"Exhausted retries for {recipient_email}")
+        with open(f"data/output/failed_emails_{exctn_id}.log", "+a") as fail_log:
+            fail_log.write(f"{recipient_email}\n")
         return False, current_token
 
     except Exception as e:
