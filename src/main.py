@@ -1,6 +1,6 @@
 import json
 import time
-
+import os
 from trigger_email_service import load_data, send_email
 import auth
 from utils.logger import setlog, exctn_id
@@ -15,7 +15,7 @@ if __name__ == '__main__':
         exit(1)
 
     try:
-        with open("src/config/introduction_email.json", "r") as email_details:
+        with open("src/config/introduction_email.json", "r", encoding="utf-8-sig") as email_details:
             email = json.load(email_details)
     except FileNotFoundError as file_error:
         log.critical(f"File not found at src/config/introduction_email.json. Exception caught - {file_error}")
@@ -43,14 +43,22 @@ if __name__ == '__main__':
 
     log.info(f"Email dispatch completed. Total successful emails sent: {sent_to}/{total_customers}")
 
-    with open("src/config/admin_emails.json", "r") as admin_email_file:
+
+    with open("src/config/admin_emails.json", "r", encoding="utf-8-sig") as admin_email_file:
         admin_emails = json.load(admin_email_file).get("emails", [])
+
+    failed_log_path = f"data/output/failed_emails_{exctn_id}.log"
+
+    attachment_paths = [failed_log_path] if os.path.exists(failed_log_path) else []
 
     for admin_email in admin_emails:
         success, token = send_email(
             recipient_email=admin_email,
             subject="Email Dispatch Summary",
-            body=f"Email dispatch process completed. Successfully sent emails to {sent_to} out of {total_customers} customers.",
+            body=(
+                f"Email dispatch process completed.\n\n"
+                f"Successfully sent emails to {sent_to} out of {total_customers} customers."
+            ),
             token=token,
-            attachment_paths=[rf"data/output/failed_emails_{exctn_id}.log"]
+            attachment_paths=attachment_paths
         )
