@@ -109,7 +109,7 @@ def send_email(recipient_email, subject, body, token, attachment_paths=None):
 
 
 def load_data():
-    path = "data/input/test.csv"
+    path = "data/input/failed_emails_russia.csv"
     cust_details = pd.DataFrame()
 
     try:
